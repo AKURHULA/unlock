@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akhurula Unlock</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-image: url('luis.png');
+    background-size: 100%;
+    background-position: center;
+    margin: 0;
+    padding: 20px;
+}
+  h2 {
+    color: #333;
+    text-align: center;
+  }
+  form {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  label {
+    font-weight: bold;
+  }
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px; /* Adicionei um espaçamento abaixo do botão */
+  }
+  button[type="submit"]:hover {
+    background-color: green;
+  }
+  #resultado {
+    font-size: 18px;
+    margin-top: 15px;
+    text-align: center;
+  }
+  #estadoPagamento {
+    font-size: 18px;
+    margin-top: 15px;
+    text-align: center;
+    color: #333;
+  }
+  /* Estilos para o link do WhatsApp */
+  .whatsapp-link {
+      display: block;
+      width: 70px; /* Novo tamanho da imagem */
+      height: 70px; /* Novo tamanho da imagem */
+      margin: 0 auto;
+      overflow: hidden; /* Garante que o texto oculto não seja exibido */
+      background-image: url('whatsapp.png');
+      background-size: cover; /* Para cobrir completamente o espaço da div */
+      background-position: center; /* Centraliza a imagem */
+      background-repeat: no-repeat; /* Para evitar a repetição da imagem */
+      transition: transform 0.3s ease; /* Adiciona uma transição suave */
+  }
+
+  .whatsapp-link:hover {
+      transform: scale(1.1); /* Aumenta um pouco o tamanho ao passar o mouse */
+  }
+  /* Estilos para o dropdown */
+  select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    appearance: none; /* Remove os estilos padrão do dropdown */
+    background-image: linear-gradient(45deg, transparent 50%, blue 50%),
+                      linear-gradient(135deg, blue 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+  }
+</style>
+</head>
+<body>
+
+<h2 style="color: white;">SIGA AS INSTRUÇÕES E OBTENHA O TEU CÓDIGO DE DESBLOQUEIO</h2>
+
+<form id="formulario">
+  <label for="marcaCelular">Escolha a marca de celular que pretende desbloquear:</label><br>
+  <select id="marcaCelular" name="marcaCelular">
+    <option value="">Selecione</option>
+    <option value="movitel">Movitel</option>
+    <option value="itel">Itel</option>
+    <option value="tecno">Tecno</option>
+    <option value="hisense">Hisense</option>
+    <option value="stylo">Stylo</option>
+    <option value="mobiwire">Mobiwire</option>
+    <option value="hurricane">Hurricane</option>
+    <option value="azumi">Azumi</option>
+    <option value="astro">Astro</option>
+    <option value="morep">Morep</option>
+  </select><br>
+
+  <label for="modeloCelular">Escolha o modelo:</label><br>
+  <select id="modeloCelular" name="modeloCelular">
+    <option value="">Selecione</option>
+  </select>
+
+  <label for="numeroImei">Digite o IMEI do celular com até 15 dígitos:</label><br>
+  <input type="text" id="numeroImei" name="numeroImei" maxlength="15"><br>
+  <label for="metodoPagamento">Escolha o método de pagamento:</label><br>
+  <select id="metodoPagamento" name="metodoPagamento">
+    <option value="">Selecione</option>
+    <option value="emola">Emola</option>
+    <option value="mpesa">Mpesa</option>
+  </select><br>
+  <button type="submit">OK</button>
+</form>
+
+<div id="paymentFormContainer" style="display: none;">
+  <h2 style="color: white;">Confirme o Pagamento</h2>
+  <form id="confirmPaymentForm">
+      <label for="numero">Digite o número do celular:</label><br>
+      <input type="text" id="numero" name="numero" maxlength="15"><br><br>
+      <button id="confirmarPagamento" type="submit">Confirmar Pagamento</button>
+  </form>
+</div>
+
+<p id="estadoPagamento" style="color: white;"></p>
+<p id="resultado" style="color: red;"></p>
+
+<h2 style="font-size: medium; text-align: center; color: white;">N.B.: Cada codigo sera cobrado 100MT pela plataforma. </h2>
+
+<a href="https://chat.whatsapp.com/C5ujV0hAkXL5ctjUkvtbg8" class="whatsapp-link"></a>
+
+<script>
+function populateModelos() {
+    var marcaSelect = document.getElementById("marcaCelular");
+    var modeloSelect = document.getElementById("modeloCelular");
+    modeloSelect.innerHTML = "<option value=''>Selecione</option>"; // Limpa as opções e adiciona 'Selecione'
+
+    // Definição das variáveis fora do bloco condicional
+    var modelos = [];
+
+    // Verificar qual marca está selecionada e preencher a lista de modelos correspondente
+    if (marcaSelect.value === "movitel") {
+      modelos = ["M9108", "M9110"];
+    } else if (marcaSelect.value === "itel") {
+      modelos = ["Itel A14", "Itel AC13 (W4001)", "Itel AC60 (L6004)", "Itel V51 LTE", "Itel Vision 1 Pro (L6502)", "Itel AC33 (W5004D)", "Itel A24", "Itel A41 Plus", "Itel A56", "Itel A26", "Itel Vision 2 Plus"];
+    } else if (marcaSelect.value === "tecno") {
+      modelos = ["Tecno SA2S", "Tecno RB6S", "Tecno SA7C", "Tecno SA7S", "Tecno RB6S", "Tecno SPARK 7 PRO (KF8)", "Tecno CAMON 17P (CG7)", "Tecno RB2S", "Tecno RB7S", "Tecno RB8S"];
+    } else if (marcaSelect.value === "hisense") {
+      modelos = ["Hisense U605", "Hisense U963", "Hisense U605", "Hisense U40", "Hisense E31 Lite", "Hisense E50 Lite", "Hisense U30 (U606.10-DF)", "Hisense U50", "Hisense U60 (HLTE108E)", "Hisense U30", "Hisense E40", "Hisense Infinity E30 Lite"];
+    } else if (marcaSelect.value === "stylo") {
+      modelos = ["Stylo S40 Life", "Stylo BOLD PLUS DDJ18", "Stylo Life DHP99", "Stylo  Life 2"];
+    } else if (marcaSelect.value === "mobiwire") {
+      modelos = ["Vodacom vibe 3G", "Vodacom vibe 4G", "Vodacom Kicka 4", "Vodacom Kicka 4 plus", "Vodacom Kicka zoom", "Vodacom Kicka 5", "Vodacom Kicka 5 plus", "Vodacom Kicka 6 plus"];
+    } else if (marcaSelect.value === "hurricane") {
+      modelos = ["Hurricane Iris Plus 2021", "Hurricane Link", "Hurricane Pulse", "Hurricane Iris", "Hurricane Storm", "Hurricane Ultra", "Hurricane Vortex"];
+    } else if (marcaSelect.value === "azumi") {
+      modelos = ["Azumi L4Z", "Azumi L3Z", "Azumi L4K", "Azumi A4", "Azumi 5", "Azumi 5+", "Azumi Speed V5+", "Azumi V4", "Azumi K242", "Azumi A35S", "Azumi chic", "Azumi L2u", "Azumi L4Z", "Azumi L2Z", "Azumi LT40", "Azumi Q10", "Azumi Q5"];
+    } else if (marcaSelect.value === "astro") {
+      modelos = ["Astro Smart A1 Plus"];
+    } else if (marcaSelect.value === "morep") {
+      modelos = ["Morep M521"];
+    }
+
+    modelos.forEach(function(modelo) {
+      var option = document.createElement("option");
+      option.text = modelo;
+      option.value = modelo;
+      modeloSelect.add(option);
+    });
+}
+
+// Chamada inicial da função para preencher os modelos ao carregar a página
+populateModelos();
+
+document.getElementById("marcaCelular").addEventListener("change", function() {
+  populateModelos(); // Chama a função sempre que a marca é alterada
+});
+
+document.getElementById("formulario").addEventListener("submit", function(event) {
+  event.preventDefault(); // Evita o envio do formulário
+
+  var marcaCelular = document.getElementById("marcaCelular").value;
+  var modeloCelular = document.getElementById("modeloCelular").value;
+  var numeroImei = document.getElementById("numeroImei").value;
+  var metodoPagamento = document.getElementById("metodoPagamento").value;
+
+  if (!marcaCelular || !modeloCelular || !numeroImei || !metodoPagamento) {
+    alert("Por favor, preencha todos os campos obrigatórios.");
+    return;
+  }
+
+  // Verifica se o número contém apenas dígitos e se tem 15 dígitos
+  if (/^\d{1,15}$/.test(numeroImei)) {
+    // Oculta o formulário de IMEI e exibe o formulário de pagamento
+    document.getElementById("formulario").style.display = "none";
+    document.getElementById("paymentFormContainer").style.display = "block";
+
+    // Exibe mensagem de confirmação do método de pagamento selecionado
+    document.getElementById("estadoPagamento").textContent = "Método de pagamento selecionado: " + metodoPagamento.charAt(0).toUpperCase() + metodoPagamento.slice(1);
+  } else {
+    alert("Digite até 15 dígitos numéricos.");
+  }
+});
+
+document.getElementById("confirmPaymentForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Evita o envio do formulário
+
+    enviarDados();
+});
+
+function enviarDados() {
+    var numero = document.getElementById("numero").value;
+    var metodoPagamento = document.getElementById("metodoPagamento").value;
+    var payload = {
+        'carteira': '1718217385406x366999215375646700',
+        'quem comprou': 'Akhurula',
+        'numero': numero,
+        'valor': '100'
+    };
+    var endpoint = metodoPagamento === 'emola' ? 'pagamentorotativoemola' : 'pagamentorotativompesa';
+
+    // Substituir o botão por "Aguarde"
+    var button = document.getElementById("confirmarPagamento");
+    button.textContent = "Aguarde...";
+
+    // Desabilitar o botão durante o envio
+    button.disabled = true;
+
+    // Enviar a solicitação POST com os dados usando fetch API
+    fetch("https://mozpayment.online/api/1.1/wf/" + endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(function(response) {
+        if (!response.ok) {
+            throw new Error("Erro de resposta do servidor: " + response.status);
+        }
+        return response.json();
+    })
+    .then(function(data) {
+        console.log("Dados enviados com sucesso:", data);
+        // Calcular código IMEI
+        var codigoIMEI = aplicarFormula(document.getElementById("numeroImei").value);
+
+        // Exibir resultado e alterar texto do botão para "Pedido finalizado"
+        var button = document.getElementById("confirmarPagamento");
+        if (data.resultado === "ok") {
+            // Se o resultado for "ok", exibir o código recebido no botão
+            button.textContent = "O teu código é: " + data.codigo;
+        } else {
+            button.textContent = "O teu código é: " + codigoIMEI;
+        }
+        button.disabled = true; // Desabilitar o botão permanentemente
+
+        // Atualizar os modelos
+        populateModelos();
+    })
+
+    .catch(function(error) {
+        console.error("Erro ao enviar dados:", error);
+        // Se precisar lidar com erros, adicione aqui
+    });
+}
+
+function aplicarFormula(numeroImei) {
+    var soma = [];
+    for (var i = 0; i < 14; i += 2) {
+        soma.push(parseInt(numeroImei[i]) + parseInt(numeroImei[i + 1]));
+    }
+
+    soma = soma.map(function(x) {
+        return x >= 10 ? x % 10 : x;
+    });
+
+    var resultado = soma.join("") + numeroImei[0];
+    return resultado;
+}
+</script>
+
+</body>
+</html>
